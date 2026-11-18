@@ -1,0 +1,1252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Café Aurora | Cafeteria de bairro</title>
+  <meta name="description" content="Café Aurora: cafés, bebidas geladas e acompanhamentos preparados diariamente. Venha viver uma pausa tranquila no bairro." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg-hero:#CABA9C;
+      --bg-soft:#EEF2EC;
+      --bg-white:#FFFFFF;
+
+      /* Verdes escuros */
+      --green-brand:#2F4A3A;
+      --green-military:#1F3A2D;
+      --green-military-2:#163022;
+      --green-deep:#0F2418;
+      --green-light:#9ED0AB;
+
+      --cta:#4D2D18;
+      --text:#161616;
+      --muted:#3F4A43;
+      --brown-ink:#8A6240;
+      --focus: var(--green-military);
+
+      --radius: 16px;
+      --max: 1120px;
+      --img-header: url("img/cafe.avif");
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:"Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:var(--bg-white);
+      overflow-x:hidden;
+    }
+    a{ color:inherit; text-decoration:none; }
+    button, input, textarea{ font:inherit; }
+    img{ max-width:100%; height:auto; display:block; }
+
+    :focus-visible{ outline:3px solid var(--focus); outline-offset:3px; border-radius:10px; }
+    header :focus-visible, footer :focus-visible, .diff :focus-visible{ outline-color:#fff; }
+
+    .skip-link{
+      position:absolute; left:12px; top:-60px; padding:10px 12px;
+      background:var(--bg-white); border:2px solid var(--focus); color:#000;
+      border-radius:10px; z-index:9999; transition:top .2s ease; font-weight:800;
+    }
+    .skip-link:focus{ top:12px; }
+
+    .container{ width:min(var(--max), calc(100% - 32px)); margin-inline:auto; }
+
+    /* ===== HEADER com a imagem de fundo e texto branco ===== */
+    header{
+      position:sticky; top:0; z-index:1000;
+      background-color:var(--green-deep);
+      background-image: linear-gradient(rgba(10,22,15,.38), rgba(10,22,15,.38)), var(--img-header);
+      background-size:cover;
+      background-position:center;
+      border-bottom:1px solid rgba(255,255,255,.18);
+      color:#fff;
+    }
+    .nav-wrap{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; padding:12px 0;
+    }
+    .brand{ display:flex; align-items:center; gap:10px; }
+    .brand svg{ width:36px; height:36px; color:#fff; flex:0 0 auto; }
+    .brand span{
+      font-family:"Playfair Display", Georgia, serif;
+      font-weight:700; font-size:20px; color:#fff; letter-spacing:.2px; line-height:1.1;
+    }
+
+    nav[aria-label="Navegação principal"]{ display:flex; align-items:center; gap:18px; }
+    .nav-links{ display:flex; gap:10px; list-style:none; margin:0; padding:0; align-items:center; }
+    .nav-links a{
+      font-weight:800; color:#fff; padding:10px 12px; border-radius:12px;
+      transition:background .15s ease; display:inline-flex; align-items:center;
+    }
+    .nav-links a:hover{ background:rgba(255,255,255,.18); }
+
+    .nav-actions{ display:flex; gap:10px; align-items:center; }
+
+    /* Rádio: controle compacto e discreto */
+    .radio{
+      position:relative; display:flex; align-items:center; gap:8px;
+      padding:3px 4px 3px 11px; border-radius:999px;
+      background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.26);
+      color:rgba(255,255,255,.92);
+      transition:border-color .2s ease, background .2s ease, opacity .2s ease;
+    }
+    .radio:hover, .radio:focus-within{ border-color:rgba(226,184,119,.75); background:rgba(255,255,255,.13); }
+    .radio-note{ width:15px; height:15px; flex:0 0 auto; color:rgba(255,255,255,.75); transition:color .2s ease; }
+    .radio[data-playing="true"] .radio-note{ color:#E2B877; }
+    .radio-label{ font-size:11.5px; font-weight:700; letter-spacing:.9px; text-transform:uppercase; }
+    .radio-btn{
+      width:30px; height:30px; border-radius:50%; border:0; cursor:pointer;
+      display:grid; place-items:center;
+      background:rgba(255,255,255,.94); color:var(--green-military);
+      transition:transform .12s ease, background .15s ease;
+    }
+    .radio-btn:hover{ background:#fff; }
+    .radio-btn:active{ transform:scale(.94); }
+    .radio-btn svg{ width:14px; height:14px; }
+    .radio-btn .i-play{ display:block; }
+    .radio-btn .i-pause{ display:none; }
+    .radio[data-playing="true"] .i-play{ display:none; }
+    .radio[data-playing="true"] .i-pause{ display:block; }
+    .radio[data-error="true"]{ opacity:.7; }
+    .radio::after{
+      content:attr(data-tip);
+      position:absolute; top:calc(100% + 8px); right:0; z-index:5;
+      white-space:nowrap; padding:6px 10px; border-radius:8px;
+      background:#1B130E; color:#fff; font-size:12px; font-weight:600;
+      border:1px solid rgba(226,184,119,.4);
+      opacity:0; transform:translateY(-4px); pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+    }
+    .radio:hover::after, .radio:focus-within::after{ opacity:1; transform:none; }
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    .hamburger{
+      display:none; width:44px; height:44px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.5); background:rgba(15,36,24,.55);
+      cursor:pointer; align-items:center; justify-content:center;
+    }
+    .hamburger svg{ width:22px; height:22px; color:#fff; }
+
+    .mobile-panel{ display:none; padding:0 0 16px; }
+    .mobile-panel[data-open="true"]{ display:block; }
+    .mobile-panel .mobile-links{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+    .mobile-panel a{
+      display:block; padding:12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.28);
+      background:rgba(15,36,24,.7); font-weight:900; color:#fff;
+    }
+    .mobile-panel a:hover{ background:rgba(15,36,24,.9); }
+
+    @media (max-width: 900px){
+      .nav-links{ display:none; }
+      .hamburger{ display:flex; }
+    }
+    @media (max-width: 560px){
+      .brand span{ font-size:17px; }
+      .radio-label{ display:none; }
+      .radio{ padding-left:9px; }
+    }
+
+    /* ===== HERO ===== */
+    .hero{ position:relative; background:var(--bg-hero); padding:48px 0 26px; overflow:hidden; }
+    .hero::before{
+      content:""; position:absolute; inset:0;
+      background-image:var(--img-header);
+      background-size:cover; background-position:center;
+      transform:scale(1.02); z-index:0;
+    }
+    .hero .container{ position:relative; z-index:2; }
+    .hero-grid{ display:grid; grid-template-columns:1fr; gap:18px; align-items:start; }
+    .hero-ctas{ display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; align-items:center; }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      border-radius:999px; padding:12px 16px; cursor:pointer;
+      border:1px solid transparent;
+      transition:transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+      font-weight:800; letter-spacing:.2px; user-select:none; white-space:nowrap;
+      color:#fff; background:var(--green-military);
+      box-shadow:0 14px 26px rgba(31,58,45,.22);
+    }
+    .btn:hover{ background:var(--green-military-2); box-shadow:0 18px 34px rgba(31,58,45,.26); }
+    .btn:active{ transform:translateY(1px); }
+    .btn-outline{
+      background:transparent; color:var(--green-military-2);
+      border-color:rgba(31,58,45,.75); box-shadow:none;
+    }
+    .btn-outline:hover{ background:rgba(31,58,45,.08); border-color:var(--green-military-2); color:var(--green-military-2); box-shadow:none; }
+    .hero .btn-outline{ background:rgba(255,255,255,.9); }
+    .btn-small{ padding:10px 12px; font-weight:950; box-shadow:none; }
+    .btn-small:hover{ box-shadow:none; }
+
+    section{ padding:56px 0; }
+    .section-header{ display:flex; align-items:flex-end; justify-content:space-between; gap:18px; margin-bottom:22px; flex-wrap:wrap; }
+    .section-header h2{
+      margin:0; font-family:"Playfair Display", Georgia, serif; font-weight:700;
+      color:var(--green-military); font-size:34px; line-height:1.1;
+    }
+    .section-header p{ margin:0; color:var(--muted); line-height:1.7; font-weight:650; max-width:62ch; }
+
+    /* Sobre */
+    .about{ background:var(--bg-soft); border-top:1px solid rgba(31,58,45,.12); border-bottom:1px solid rgba(31,58,45,.12); }
+    .about-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:18px; align-items:start; }
+    .about-card, .about-aside{
+      background:rgba(255,255,255,.95); border:1px solid rgba(31,58,45,.2);
+      border-radius:var(--radius); padding:20px; box-shadow:0 12px 26px rgba(0,0,0,.05);
+    }
+    .about-card p{ margin:0; line-height:1.8; color:#1d2a22; font-weight:650; font-size:16px; }
+    .highlights{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+    .highlight{
+      padding:14px; border-radius:14px; background:#fff; border:1px solid rgba(31,58,45,.18);
+      display:flex; gap:12px; align-items:flex-start; min-height:92px;
+    }
+    .highlight svg{ width:22px; height:22px; color:var(--green-military); margin-top:3px; flex:0 0 auto; }
+    .highlight strong{ display:block; color:var(--green-deep); font-size:14px; font-weight:950; margin-bottom:4px; }
+    .highlight span{ display:block; color:var(--muted); font-weight:650; font-size:13px; line-height:1.55; }
+    .about-aside .actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; }
+
+    /* Produtos */
+    .filters{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+    .chip{
+      border-radius:999px; border:1px solid rgba(31,58,45,.35);
+      background:#fff; color:var(--green-deep);
+      padding:10px 14px; font-weight:950; cursor:pointer;
+      transition:background .12s ease, border-color .12s ease, color .12s ease;
+    }
+    .chip:hover{ background:rgba(31,58,45,.08); }
+    .chip[aria-pressed="true"]{ background:var(--green-military); border-color:var(--green-military); color:#fff; }
+
+    .products-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; }
+    .product{
+      background:#fff; border:1px solid rgba(31,58,45,.2); border-radius:var(--radius);
+      padding:18px; box-shadow:0 12px 26px rgba(0,0,0,.04);
+      display:flex; flex-direction:column; gap:12px; min-height:220px;
+    }
+    .product-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+    .cat{ font-weight:950; color:var(--green-brand); letter-spacing:.22px; text-transform:uppercase; font-size:12px; }
+    .price{ font-family:"Playfair Display", Georgia, serif; font-weight:700; color:var(--green-military); font-size:20px; white-space:nowrap; }
+    .product h3{ margin:0; font-family:"Playfair Display", Georgia, serif; font-weight:700; font-size:22px; color:var(--green-deep); line-height:1.2; }
+    .product p{ margin:0; color:var(--muted); line-height:1.65; font-weight:650; }
+    .product .actions{ margin-top:auto; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+
+    /* Diferenciais: fundo verde escuro */
+    .diff{ background:var(--green-military); color:#fff; }
+    .diff .section-header h2{ color:#fff; }
+    .diff .section-header p{ color:rgba(255,255,255,.88); }
+    .diff-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; }
+    .diff-card{
+      background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.22);
+      border-radius:var(--radius); padding:18px; display:flex; gap:14px; align-items:flex-start; min-height:156px;
+    }
+    .diff-card .icon{
+      width:46px; height:46px; border-radius:14px;
+      background:rgba(158,208,171,.16); border:1px solid rgba(158,208,171,.4);
+      display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+    }
+    .diff-card svg{ width:22px; height:22px; color:var(--green-light); }
+    .diff-card strong{ display:block; color:#fff; font-family:"Playfair Display", Georgia, serif; font-weight:700; font-size:20px; margin-top:2px; }
+    .diff-card span{ display:block; margin-top:6px; color:rgba(255,255,255,.88); font-weight:700; line-height:1.6; }
+
+    /* Contato */
+    .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+    .info-card, .form-card{
+      border:1px solid rgba(31,58,45,.22); border-radius:var(--radius);
+      padding:18px; box-shadow:0 12px 26px rgba(0,0,0,.04);
+    }
+    .info-card{ background:var(--bg-soft); }
+    .form-card{ background:#fff; }
+    .info-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; padding:12px 0; border-bottom:1px solid rgba(31,58,45,.14); }
+    .info-row:last-child{ border-bottom:none; padding-bottom:0; }
+    .info-row .label{ font-weight:950; color:var(--green-brand); font-size:12px; text-transform:uppercase; letter-spacing:.22px; margin-bottom:6px; }
+    .info-row .value{ font-weight:750; color:#1d2a22; line-height:1.6; }
+    .copy-btn{
+      flex:0 0 auto; padding:10px 12px; border-radius:999px;
+      border:1px solid rgba(31,58,45,.4); background:#fff;
+      color:var(--green-military-2); font-weight:950; cursor:pointer; white-space:nowrap;
+    }
+    .copy-btn:hover{ background:rgba(31,58,45,.08); }
+    form{ display:flex; flex-direction:column; gap:12px; margin-top:8px; }
+    label{ font-weight:950; color:var(--green-brand); font-size:12px; text-transform:uppercase; letter-spacing:.22px; }
+    .field{ display:flex; flex-direction:column; gap:8px; }
+    input, textarea{
+      border-radius:14px; border:1px solid rgba(31,58,45,.3);
+      background:var(--bg-soft); padding:12px; color:#14201a; font-weight:650;
+    }
+    textarea{ min-height:118px; resize:vertical; }
+    input::placeholder, textarea::placeholder{ color:rgba(60,60,60,.6); font-weight:650; }
+    .form-actions{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .success-text{ color:var(--green-military); font-weight:900; min-height:22px; }
+
+    /* Footer */
+    footer{ background:var(--green-deep); color:rgba(255,255,255,.92); padding:26px 0; }
+    .footer-wrap{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .footer-brand{ display:flex; align-items:center; gap:10px; }
+    .footer-brand svg{ width:28px; height:28px; color:#fff; }
+    .footer-brand strong{ font-family:"Playfair Display", Georgia, serif; font-weight:700; font-size:18px; }
+    footer small{ font-weight:650; }
+
+    /* Voltar ao topo */
+    .to-top{
+      position:fixed; right:16px; bottom:16px; z-index:2000;
+      border-radius:999px; padding:12px 14px;
+      border:1px solid rgba(255,255,255,.22);
+      background:var(--green-military); color:#fff; cursor:pointer;
+      box-shadow:0 18px 40px rgba(0,0,0,.25);
+      opacity:0; transform:translateY(10px); pointer-events:none;
+      transition:opacity .25s ease, transform .25s ease;
+      display:flex; align-items:center; gap:8px;
+    }
+    .to-top[aria-hidden="false"]{ opacity:1; transform:translateY(0); pointer-events:auto; }
+    .to-top svg{ width:18px; height:18px; }
+
+    /* WhatsApp: só o ícone, menor */
+    .whatsapp-float{
+      position:fixed; left:16px; bottom:16px; z-index:2001;
+      width:44px; height:44px; border-radius:50%;
+      display:grid; place-items:center;
+      background:#0B5C2A; color:#fff;
+      border:1px solid rgba(255,255,255,.25);
+      box-shadow:0 10px 24px rgba(0,0,0,.25);
+      transition:transform .12s ease, background .12s ease;
+    }
+    .whatsapp-float:hover{ background:#094d23; transform:scale(1.06); }
+    .whatsapp-float svg{ width:22px; height:22px; }
+
+    @media (max-width: 900px){
+      .hero{ padding-top:32px; }
+      .about-grid, .products-grid, .diff-grid, .contact-grid{ grid-template-columns:1fr; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      *{ transition:none !important; animation:none !important; }
+    }
+
+    /* =========================================================
+       CAMADA DE ELEGÂNCIA — teoria das cores (60-30-10)
+       60% neutros quentes (creme/areia) · 30% verde escuro
+       10% cobre/dourado (cor complementar do verde, tirada do café da foto)
+       ========================================================= */
+    :root{
+      --cream:#F8F3EA;
+      --sand:#EDE4D3;
+      --sage:#E3EADF;
+      --espresso:#1B130E;
+      --copper:#A8632F;
+      --copper-ink:#8A4B1F;
+      --gold:#E2B877;
+      --ink:#241A14;
+      --radius:20px;
+      --shadow-card:0 1px 2px rgba(27,19,14,.05), 0 14px 34px rgba(27,19,14,.07);
+      --shadow-lift:0 2px 4px rgba(27,19,14,.06), 0 22px 44px rgba(27,19,14,.13);
+    }
+    body{ background:var(--cream); color:var(--ink); -webkit-font-smoothing:antialiased; }
+
+    /* HEADER: foto do café como fundo, com véu verde-escuro suave à esquerda */
+    header{
+      background-color:var(--espresso);
+      background-image: url(img/cafe.avif)
+        linear-gradient(90deg, rgba(15,36,24,.72) 0%, rgba(15,36,24,.35) 55%, rgba(27,19,14,.25) 100%),
+        var(--img-header);
+      background-size:cover;
+      background-position:center 10%;
+      border-bottom:1px solid rgba(226,184,119,.45);
+      box-shadow:0 6px 24px rgba(0,0,0,.18);
+    }
+    .brand span{ letter-spacing:.6px; }
+    .nav-links a{ letter-spacing:.3px; font-weight:700; position:relative; }
+    .nav-links a::after{
+      content:""; position:absolute; left:12px; right:12px; bottom:5px; height:1px;
+      background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .25s ease;
+    }
+    .nav-links a:hover{ background:transparent; }
+    .nav-links a:hover::after{ transform:scaleX(1); }
+
+    /* HERO: mesma foto, mais alta e com degradê para destacar os botões */
+    .hero{
+      min-height:min(78vh, 620px);
+      display:flex; align-items:flex-end;
+      padding:0 0 64px; background:var(--espresso);
+    }
+    .hero::before{ background-position:center 58%; transform:none; }
+    .hero::after{
+      content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+      background:
+        linear-gradient(to top, rgba(15,36,24,.88) 0%, rgba(15,36,24,.35) 42%, rgba(15,36,24,0) 70%),
+        linear-gradient(90deg, rgba(15,36,24,.55) 0%, rgba(15,36,24,0) 60%);
+    }
+    .hero .container{ width:min(var(--max), calc(100% - 32px)); }
+    .hero .btn{ background:var(--copper); border-color:rgba(226,184,119,.55); box-shadow:0 16px 32px rgba(0,0,0,.35); padding:14px 22px; }
+    .hero .btn:hover{ background:var(--copper-ink); }
+    .hero .btn-outline{
+      background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.75);
+      backdrop-filter:blur(6px); box-shadow:none;
+    }
+    .hero .btn-outline:hover{ background:rgba(255,255,255,.22); border-color:#fff; color:#fff; }
+
+    /* Tipografia e títulos de seção */
+    section{ padding:84px 0; }
+    .section-header h2{ font-size:38px; letter-spacing:.3px; color:var(--green-military); }
+    .section-header h2::after{
+      content:""; display:block; width:64px; height:2px; margin-top:16px;
+      background:linear-gradient(90deg, var(--copper), var(--gold));
+    }
+    .section-header p{ color:#4A423B; font-size:16.5px; }
+
+    /* Botões */
+    .btn{ letter-spacing:.4px; }
+    .btn-outline{ color:var(--green-military); border-color:rgba(31,58,45,.55); }
+    .btn-outline:hover{ background:var(--green-military); color:#fff; border-color:var(--green-military); }
+
+    /* PRODUTOS — creme, cartões brancos, detalhes em cobre */
+    #produtos{ background:var(--cream); }
+    .chip{ border-color:rgba(31,58,45,.3); background:rgba(255,255,255,.7); letter-spacing:.2px; }
+    .product{
+      border:1px solid rgba(31,58,45,.16);
+      border-radius:18px;
+      background:#fff;
+      box-shadow:0 1px 2px rgba(27,19,14,.04), 0 6px 18px rgba(27,19,14,.05);
+      transition:transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease, border-color .3s ease;
+    }
+    .product:hover{
+      transform:translateY(-4px);
+      border-color:rgba(31,58,45,.28);
+      box-shadow:0 2px 4px rgba(27,19,14,.05), 0 18px 34px rgba(27,19,14,.11);
+    }
+    .cat{ color:var(--green-brand); letter-spacing:.8px; }
+    .price{ color:var(--copper-ink); font-size:22px; }
+    .product h3{ color:var(--espresso); }
+    .product p{ color:#51483F; }
+
+    /* DIFERENCIAIS — verde escuro com acentos dourados */
+    .diff{
+      background:
+        radial-gradient(900px 380px at 85% 0%, rgba(168,99,47,.22), transparent 60%),
+        linear-gradient(160deg, var(--green-military) 0%, var(--green-deep) 100%);
+      border-top:1px solid rgba(226,184,119,.35);
+    }
+    .diff .section-header h2::after{ background:linear-gradient(90deg, var(--gold), rgba(226,184,119,.2)); }
+    .diff-card{
+      background:rgba(248,243,234,.06); border:1px solid rgba(226,184,119,.28);
+      border-radius:var(--radius); backdrop-filter:blur(4px);
+      transition:transform .25s ease, background .25s ease;
+    }
+    .diff-card:hover{ transform:translateY(-4px); background:rgba(248,243,234,.11); }
+    .diff-card .icon{ background:rgba(226,184,119,.14); border-color:rgba(226,184,119,.5); }
+    .diff-card svg{ color:var(--gold); }
+    .diff-card strong{ letter-spacing:.2px; }
+
+    /* CONTATO — fundo claro, cartões areia + branco */
+    #contato{ background:#fff; }
+    .info-card{ background:var(--sand); border:1px solid rgba(138,75,31,.2); border-radius:var(--radius); box-shadow:var(--shadow-card); }
+    .form-card{ border:1px solid rgba(138,75,31,.16); border-radius:var(--radius); box-shadow:var(--shadow-card); }
+    .info-row{ border-bottom-color:rgba(138,75,31,.2); }
+    .info-row .label, label{ color:var(--copper-ink); letter-spacing:.8px; }
+    .info-row .value{ color:var(--ink); }
+    .copy-btn{ border-color:rgba(31,58,45,.45); }
+    input, textarea{ background:var(--cream); border-color:rgba(138,75,31,.28); border-radius:14px; }
+    input:focus, textarea:focus{ outline:none; border-color:var(--green-military); box-shadow:0 0 0 3px rgba(31,58,45,.15); }
+
+    /* SOBRE — mescla de areia e sálvia */
+    .about{
+      background:linear-gradient(180deg, var(--sand) 0%, var(--sage) 100%);
+      border-top:1px solid rgba(138,75,31,.15); border-bottom:none;
+    }
+    .about-card, .about-aside{ border:1px solid rgba(138,75,31,.16); border-radius:var(--radius); box-shadow:var(--shadow-card); background:rgba(255,255,255,.88); }
+    .about-card p{ color:#2c231c; }
+    .highlight{ border:1px solid rgba(138,75,31,.16); border-left:3px solid var(--green-military); border-radius:14px; }
+    .highlight:nth-child(even){ border-left-color:var(--copper); }
+    .highlight svg{ color:var(--green-military); }
+    .highlight:nth-child(even) svg{ color:var(--copper-ink); }
+    .highlight strong{ color:var(--espresso); }
+
+    /* RODAPÉ e botões flutuantes */
+    footer{
+      background:linear-gradient(180deg, var(--green-deep), var(--espresso));
+      border-top:2px solid var(--copper); padding:34px 0;
+    }
+    .footer-brand strong{ letter-spacing:.6px; }
+    .to-top{ background:var(--copper); border-color:rgba(255,255,255,.25); }
+
+    @media (max-width:900px){
+      section{ padding:64px 0; }
+      .section-header h2{ font-size:31px; }
+      .hero{ min-height:480px; padding-bottom:44px; }
+    }
+
+    /* ===== Refinamento dos cards, filtros e cabeçalho de Produtos ===== */
+    .product-id{ min-width:0; display:flex; flex-direction:column; gap:8px; }
+    .meta{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+    .title-row{ display:flex; align-items:center; gap:10px; }
+
+    .tag{
+      display:inline-flex; align-items:center; padding:3px 9px; border-radius:999px;
+      font-size:10.5px; font-weight:800; letter-spacing:.7px; text-transform:uppercase; line-height:1.4;
+      color:var(--copper-ink); background:rgba(168,99,47,.09); border:1px solid rgba(168,99,47,.35);
+    }
+    .tag--green{ color:var(--green-military); background:rgba(31,58,45,.07); border-color:rgba(31,58,45,.32); }
+
+    .info-btn{
+      flex:0 0 auto; width:22px; height:22px; border-radius:50%;
+      display:inline-grid; place-items:center;
+      font-size:12px; font-weight:800; line-height:1; color:var(--green-military);
+      border:1px solid rgba(31,58,45,.32); background:transparent;
+      transition:background .2s ease, color .2s ease, border-color .2s ease;
+    }
+    .info-btn:hover, .info-btn:focus-visible{ background:var(--green-military); color:#fff; border-color:var(--green-military); }
+
+    .btn-add{
+      background:var(--green-military); color:#fff; border:1px solid var(--green-military);
+      padding:10px 22px; font-weight:800; letter-spacing:.4px; box-shadow:none;
+      transition:background .25s ease, border-color .25s ease, transform .12s ease;
+    }
+    .btn-add:hover{ background:var(--green-deep); border-color:var(--green-deep); box-shadow:none; }
+
+    .chip{ padding:9px 18px; font-size:14px; font-weight:700; letter-spacing:.2px; transition:background .2s ease, color .2s ease, border-color .2s ease; }
+
+    #produtos .section-header{ justify-content:center; text-align:center; margin-bottom:26px; }
+    #produtos .section-header p{ margin-inline:auto; }
+    #produtos .section-header h2::after{ margin-inline:auto; }
+    #produtos .filters{ justify-content:center; margin-bottom:34px; }
+    #produtos #produtoFeedback{ text-align:center; }
+
+    /* =========================================================
+       PALETA ARTESANAL — café torrado, caramelo, espuma de leite
+       e folha de café
+       ========================================================= */
+    :root{
+      --espresso:#261710;
+      --roast:#3B2316;
+      --latte:#6B4F3F;
+      --mid:#8C6D58;
+      --caramel:#D4A373;
+      --caramel-dark:#A66E38;
+      --oat:#F6F1E9;
+      --foam:#FCF9F5;
+      --golden-cream:#F3E8D8;
+      --line:#E5D9C8;
+      --line-strong:#D8C8B4;
+      --leaf:#2E4A3E;
+      --leaf-dark:#233930;
+
+      /* aliases usados pelo restante do CSS */
+      --green-military:#2E4A3E;
+      --green-military-2:#233930;
+      --green-brand:#2E4A3E;
+      --green-deep:#1B2D24;
+      --copper:#A66E38;
+      --copper-ink:#A66E38;
+      --gold:#D4A373;
+      --cream:#F6F1E9;
+      --sand:#F3E8D8;
+      --ink:#3B2316;
+      --text:#3B2316;
+      --muted:#6B4F3F;
+      --focus:#2E4A3E;
+    }
+
+    body{ background:#F6F1E9; color:#3B2316; }
+
+    /* Navbar */
+    header{
+      background:#261710; background-image:none; color:#FAF6F0;
+      border-bottom:1px solid rgba(212,163,115,.3);
+      box-shadow:0 6px 24px rgba(38,23,16,.25);
+    }
+    .brand svg, .brand span{ color:#FAF6F0; transition:color .2s ease; }
+    .brand:hover svg, .brand:hover span{ color:#D4A373; }
+    .nav-links a{ color:#FAF6F0; transition:color .2s ease, background .2s ease; }
+    .nav-links a:hover{ color:#D4A373; background:transparent; }
+    .nav-links a::after{ background:#D4A373; }
+    .hamburger{ border-color:rgba(250,246,240,.35); background:rgba(255,248,240,.08); }
+    .hamburger svg{ color:#FAF6F0; }
+    .mobile-panel a{ background:rgba(255,248,240,.06); border-color:rgba(250,246,240,.18); color:#FAF6F0; }
+    .mobile-panel a:hover{ background:rgba(255,248,240,.14); color:#D4A373; }
+
+    /* Rádio */
+    .radio{ background:rgba(255,248,240,.08); border:1px solid rgba(255,248,240,.22); color:#FAF6F0; }
+    .radio:hover, .radio:focus-within{ background:rgba(255,248,240,.13); border-color:rgba(212,163,115,.7); }
+    .radio[data-playing="true"] .radio-note{ color:#D4A373; }
+    .radio-btn{ background:#FAF6F0; color:#2E4A3E; }
+    .radio-btn:hover{ background:#fff; }
+    .radio::after{ background:#261710; border-color:rgba(212,163,115,.45); }
+
+    /* Hero (degradê quente sobre a foto) */
+    .hero{ background:#261710; }
+    .hero::after{
+      background:
+        linear-gradient(to top, rgba(38,23,16,.86) 0%, rgba(38,23,16,.32) 42%, rgba(38,23,16,0) 70%),
+        linear-gradient(90deg, rgba(38,23,16,.5) 0%, rgba(38,23,16,0) 60%);
+    }
+    .hero .btn{ background:#A66E38; border-color:rgba(212,163,115,.6); }
+    .hero .btn:hover{ background:#8A5A2C; }
+
+    /* Títulos e textos */
+    .section-header h2{ color:#3B2316; }
+    .section-header h2::after{ background:linear-gradient(90deg, #A66E38, #D4A373); }
+    .section-header p{ color:#6B4F3F; }
+    .diff .section-header h2{ color:#FAF6F0; }
+    .diff .section-header h2::after{ background:linear-gradient(90deg, #D4A373, rgba(212,163,115,.2)); }
+    .diff .section-header p{ color:rgba(250,246,240,.88); }
+
+    /* Filtros */
+    .chip{ background:#FCF9F5; border:1px solid #D8C8B4; color:#3B2316; }
+    .chip:hover{ background:#F3E8D8; }
+    .chip[aria-pressed="true"]{ background:#2E4A3E; border-color:#2E4A3E; color:#fff; }
+    .chip[aria-pressed="true"]:hover{ background:#233930; border-color:#233930; }
+
+    /* Cards de produto */
+    .product{
+      background:#FCF9F5; border:1px solid #E5D9C8;
+      box-shadow:0 1px 2px rgba(59,35,22,.04), 0 6px 18px rgba(59,35,22,.06);
+    }
+    .product:hover{
+      border-color:#D8C8B4;
+      box-shadow:0 2px 4px rgba(59,35,22,.05), 0 18px 34px rgba(59,35,22,.12);
+    }
+    .product h3{ color:#3B2316; }
+    .product p{ color:#6B4F3F; }
+    .cat{ color:#8C6D58; }
+    .price{ color:#A66E38; }
+    .tag, .tag--green{ background:#F3E8D8; color:#A66E38; border:1px solid #E5CFAF; }
+    .info-btn{ color:#2E4A3E; border-color:rgba(46,74,62,.35); }
+    .info-btn:hover, .info-btn:focus-visible{ background:#2E4A3E; border-color:#2E4A3E; color:#fff; }
+
+    /* Botões */
+    .btn{ background:#2E4A3E; color:#fff; }
+    .btn:hover{ background:#233930; }
+    .btn-outline{ background:transparent; color:#2E4A3E; border-color:rgba(46,74,62,.6); }
+    .btn-outline:hover{ background:#2E4A3E; color:#fff; border-color:#2E4A3E; }
+    .hero .btn-outline{ background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.75); }
+    .hero .btn-outline:hover{ background:rgba(255,255,255,.22); color:#fff; border-color:#fff; }
+    .btn-add{ background:#2E4A3E; border-color:#2E4A3E; color:#fff; }
+    .btn-add:hover{ background:#233930; border-color:#233930; }
+
+    /* Diferenciais: verde folha de café */
+    .diff{
+      background:
+        radial-gradient(900px 380px at 85% 0%, rgba(166,110,56,.25), transparent 60%),
+        linear-gradient(160deg, #2E4A3E 0%, #233930 100%);
+      border-top:1px solid rgba(212,163,115,.35);
+    }
+    .diff-card{ border-color:rgba(212,163,115,.3); }
+    .diff-card .icon{ background:rgba(212,163,115,.14); border-color:rgba(212,163,115,.5); }
+    .diff-card svg{ color:#D4A373; }
+
+    /* Contato */
+    #contato{ background:#FCF9F5; }
+    .info-card{ background:#F3E8D8; border:1px solid #E5D9C8; }
+    .form-card{ background:#fff; border:1px solid #E5D9C8; }
+    .info-row{ border-bottom-color:#E5D9C8; }
+    .info-row .label, label{ color:#8C6D58; }
+    .info-row .value{ color:#3B2316; }
+    .copy-btn{ border-color:#D8C8B4; color:#2E4A3E; background:#FCF9F5; }
+    .copy-btn:hover{ background:#F3E8D8; }
+    input, textarea{ background:#F6F1E9; border-color:#D8C8B4; color:#3B2316; }
+    input:focus, textarea:focus{ border-color:#2E4A3E; box-shadow:0 0 0 3px rgba(46,74,62,.15); }
+    input::placeholder, textarea::placeholder{ color:rgba(107,79,63,.6); }
+
+    /* Sobre */
+    .about{ background:linear-gradient(180deg, #F3E8D8 0%, #E4EADF 100%); border-top:1px solid #E5D9C8; }
+    .about-card, .about-aside{ background:#FCF9F5; border:1px solid #E5D9C8; }
+    .about-card p, .about-aside p{ color:#6B4F3F !important; }
+    .highlight{ background:#fff; border:1px solid #E5D9C8; border-left:3px solid #2E4A3E; }
+    .highlight:nth-child(even){ border-left-color:#A66E38; }
+    .highlight svg{ color:#2E4A3E; }
+    .highlight:nth-child(even) svg{ color:#A66E38; }
+    .highlight strong{ color:#3B2316; }
+    .highlight span{ color:#6B4F3F; }
+
+    /* Rodapé e botão topo */
+    footer{ background:linear-gradient(180deg, #233930, #261710); border-top:2px solid #A66E38; color:#FAF6F0; }
+    .to-top{ background:#A66E38; }
+
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+
+  <header>
+    <div class="container">
+      <div class="nav-wrap">
+        <a class="brand" href="#inicio" aria-label="Ir para a seção Início">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path fill="currentColor" d="M20 12c0-3.3 2.7-6 6-6h12c3.3 0 6 2.7 6 6v6H20v-6z"/>
+            <path fill="currentColor" d="M18 22h28c3.3 0 6 2.7 6 6v6c0 8.8-7.2 16-16 16H28c-8.8 0-16-7.2-16-16v-6c0-3.3 2.7-6 6-6z" opacity=".95"/>
+            <path fill="#261710" opacity=".9" d="M47 34c2.2 0 4 1.8 4 4s-1.8 4-4 4h-2v-8h2z"/>
+          </svg>
+          <span>Café Aurora</span>
+        </a>
+
+        <nav aria-label="Navegação principal">
+          <ul class="nav-links">
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#produtos">Produtos</a></li>
+            <li><a href="#diferenciais">Diferenciais</a></li>
+            <li><a href="#contato">Contato</a></li>
+            <li><a href="#sobre">Sobre</a></li>
+          </ul>
+
+          <div class="nav-actions">
+            <!-- Radio Paradise: play/pause no menu -->
+            <div class="radio" id="radioBox" data-playing="false" data-error="false" data-tip="Radio Paradise" role="group" aria-label="Radio Paradise">
+              <svg class="radio-note" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+              <span class="radio-label">Rádio</span>
+              <button class="radio-btn" type="button" id="btnRadio" aria-label="Tocar rádio">
+                <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+                <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
+              </button>
+              <span class="sr-only" id="radioStatus" role="status" aria-live="polite">Conectando…</span>
+            </div>
+
+            <button class="hamburger" type="button" id="btnMenuMobile"
+              aria-label="Abrir menu" aria-expanded="false" aria-controls="menuMobile">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M4 7h16v2H4V7zm0 8h16v2H4v-2z"/>
+                <path fill="currentColor" d="M4 11h16v2H4v-2z" opacity=".55"/>
+              </svg>
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      <div class="mobile-panel" id="menuMobile" data-open="false" aria-label="Menu mobile">
+        <ul class="mobile-links">
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#produtos">Produtos</a></li>
+          <li><a href="#diferenciais">Diferenciais</a></li>
+          <li><a href="#contato">Contato</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <audio id="radio" preload="none"></audio>
+
+  <main id="conteudo">
+    <!-- HERO: só CTAs -->
+    <section class="hero" id="inicio" aria-labelledby="titulo-hero">
+      <div class="container">
+        <h1 id="titulo-hero" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Café Aurora</h1>
+        <div class="hero-grid">
+          <div class="hero-ctas" aria-label="Chamadas para ação">
+            <a class="btn" href="#produtos" aria-label="Conheça nosso cardápio">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path fill="#fff" d="M12 2l1.2 5.1L18 9l-4.8 1.9L12 16l-1.2-5.1L6 9l4.8-1.9L12 2z"/>
+                <path fill="#fff" opacity=".95" d="M20 13l.7 2.9L23 17l-2.3.9L20 21l-.7-3.1L17 17l2.3-1.1L20 13z"/>
+              </svg>
+              Conheça nosso cardápio
+            </a>
+            <a class="btn btn-outline" href="#contato" aria-label="Fale conosco">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                <path fill="#fff" opacity=".35" d="M8 8h8v2H8V8zm0 4h6v2H8v-2z"/>
+              </svg>
+              Fale conosco
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUTOS -->
+    <section id="produtos" aria-labelledby="titulo-produtos">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 id="titulo-produtos">Produtos</h2>
+            <p>Explore nossos clássicos e novidades do dia. Use os filtros para encontrar o que combina com sua pausa.</p>
+          </div>
+        </div>
+
+        <div class="filters" role="group" aria-label="Filtros de produtos">
+          <button class="chip" type="button" data-filter="todos" aria-pressed="true">Todos</button>
+          <button class="chip" type="button" data-filter="quentes" aria-pressed="false">Bebidas Quentes</button>
+          <button class="chip" type="button" data-filter="gelados" aria-pressed="false">Bebidas Geladas</button>
+          <button class="chip" type="button" data-filter="acompanhamentos" aria-pressed="false">Acompanhamentos</button>
+        </div>
+
+        <div class="products-grid" id="gridProdutos" aria-live="polite" aria-label="Lista de produtos">
+          <article class="product" data-cat="quentes" aria-label="Café Expresso Aurora">
+            <div class="product-top">
+              <div class="product-id">
+                <div class="meta">
+                  <span class="cat">Bebida Quente</span>
+                  <span class="tag tag--green">Especialidade da casa</span>
+                </div>
+                <div class="title-row">
+                  <h3>Café Expresso Aurora</h3>
+                  <a class="info-btn" href="#contato" title="Tirar dúvidas" aria-label="Tirar dúvidas sobre Café Expresso Aurora"><span aria-hidden="true">?</span></a>
+                </div>
+              </div>
+              <div class="price">R$ 9,50</div>
+            </div>
+            <p>Um expresso encorpado, cremoso e aromático — do jeito que começa o dia com energia.</p>
+            <div class="actions">
+              <button class="btn btn-small btn-add" type="button" data-add="Café Expresso Aurora" aria-label="Adicionar Café Expresso Aurora ao pedido">Adicionar</button>
+            </div>
+          </article>
+
+          <article class="product" data-cat="quentes" aria-label="Cappuccino Cremoso">
+            <div class="product-top">
+              <div class="product-id">
+                <div class="meta">
+                  <span class="cat">Bebida Quente</span>
+                  <span class="tag ">Mais pedido</span>
+                </div>
+                <div class="title-row">
+                  <h3>Cappuccino Cremoso</h3>
+                  <a class="info-btn" href="#contato" title="Tirar dúvidas" aria-label="Tirar dúvidas sobre Cappuccino Cremoso"><span aria-hidden="true">?</span></a>
+                </div>
+              </div>
+              <div class="price">R$ 13,90</div>
+            </div>
+            <p>Espuma macia e sabor equilibrado. Perfeito para uma pausa acolhedora.</p>
+            <div class="actions">
+              <button class="btn btn-small btn-add" type="button" data-add="Cappuccino Cremoso" aria-label="Adicionar Cappuccino Cremoso ao pedido">Adicionar</button>
+            </div>
+          </article>
+
+          <article class="product" data-cat="gelados" aria-label="Iced Latte de Baunilha">
+            <div class="product-top">
+              <div class="product-id">
+                <div class="meta">
+                  <span class="cat">Bebida Gelada</span>
+                </div>
+                <div class="title-row">
+                  <h3>Iced Latte de Baunilha</h3>
+                  <a class="info-btn" href="#contato" title="Tirar dúvidas" aria-label="Tirar dúvidas sobre Iced Latte de Baunilha"><span aria-hidden="true">?</span></a>
+                </div>
+              </div>
+              <div class="price">R$ 16,50</div>
+            </div>
+            <p>Leve, refrescante e com toque de baunilha. Sabor suave do começo ao fim.</p>
+            <div class="actions">
+              <button class="btn btn-small btn-add" type="button" data-add="Iced Latte de Baunilha" aria-label="Adicionar Iced Latte de Baunilha ao pedido">Adicionar</button>
+            </div>
+          </article>
+
+          <article class="product" data-cat="acompanhamentos" aria-label="Pão de Queijo da Casa">
+            <div class="product-top">
+              <div class="product-id">
+                <div class="meta">
+                  <span class="cat">Acompanhamento</span>
+                  <span class="tag tag--green">Saído do forno</span>
+                </div>
+                <div class="title-row">
+                  <h3>Pão de Queijo da Casa</h3>
+                  <a class="info-btn" href="#contato" title="Tirar dúvidas" aria-label="Tirar dúvidas sobre Pão de Queijo da Casa"><span aria-hidden="true">?</span></a>
+                </div>
+              </div>
+              <div class="price">R$ 8,00</div>
+            </div>
+            <p>Quentinho, dourado por fora e macio por dentro. Vai bem com qualquer bebida.</p>
+            <div class="actions">
+              <button class="btn btn-small btn-add" type="button" data-add="Pão de Queijo da Casa" aria-label="Adicionar Pão de Queijo da Casa ao pedido">Adicionar</button>
+            </div>
+          </article>
+        </div>
+
+        <div id="produtoFeedback" role="status" aria-live="polite" style="min-height:22px; margin-top:14px; color:var(--green-military); font-weight:950;"></div>
+      </div>
+    </section>
+
+    <!-- DIFERENCIAIS -->
+    <section class="diff" id="diferenciais" aria-labelledby="titulo-diferenciais">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 id="titulo-diferenciais">Diferenciais</h2>
+            <p>Pequenos detalhes que fazem a experiência ficar ainda mais gostosa.</p>
+          </div>
+        </div>
+
+        <div class="diff-grid">
+          <article class="diff-card" aria-label="Preparo fresco na hora">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 5v5l4 2-1 2-5-3V7h2z"/></svg>
+            </div>
+            <div><strong>Preparo fresco na hora</strong><span>Foco em qualidade e aroma em cada preparação.</span></div>
+          </article>
+
+          <article class="diff-card" aria-label="Ingredientes selecionados">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path fill="currentColor" d="M7 2h10l2 6-7 14L5 8l2-6zm5 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" opacity=".95"/>
+                <path fill="currentColor" d="M12 10l3.5 3.5-3.5 7-3.5-7L12 10z" opacity=".35"/>
+              </svg>
+            </div>
+            <div><strong>Ingredientes selecionados</strong><span>Escolhas cuidadosas para um sabor consistente.</span></div>
+          </article>
+
+          <article class="diff-card" aria-label="Ambiente acolhedor">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm-9 9a9 9 0 0 1 18 0H3z"/></svg>
+            </div>
+            <div><strong>Ambiente acolhedor</strong><span>Uma pausa tranquila para conversar e recarregar.</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" aria-labelledby="titulo-contato">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 id="titulo-contato">Contato</h2>
+            <p>Fale com a gente e agende sua próxima visita. Responderemos assim que possível.</p>
+          </div>
+        </div>
+
+        <div class="contact-grid">
+          <aside class="info-card" aria-label="Informações de contato">
+            <div class="info-row">
+              <div>
+                <div class="label">Endereço</div>
+                <div class="value" id="enderecoTexto">Rua das Acácias, 245 — Bairro Jardim</div>
+              </div>
+              <button class="copy-btn" type="button" id="btnCopiarEndereco" aria-label="Copiar endereço">Copiar</button>
+            </div>
+
+            <div id="copyFeedback" role="status" aria-live="polite" style="min-height:22px; color:var(--green-military); font-weight:950;"></div>
+
+            <div class="info-row">
+              <div><div class="label">Horário</div><div class="value">Todos os dias • 07h às 19h</div></div>
+            </div>
+            <div class="info-row">
+              <div><div class="label">Telefone / WhatsApp</div><div class="value">(11) 3456-7890</div></div>
+            </div>
+            <div class="info-row">
+              <div><div class="label">E-mail</div><div class="value">contato@cafeaurora.com</div></div>
+            </div>
+          </aside>
+
+          <article class="form-card" aria-label="Formulário de contato">
+            <div style="font-weight:900; color:var(--green-military); font-size:14px; margin-bottom:4px;">Envie uma mensagem</div>
+
+            <form id="formContato" novalidate>
+              <div class="field">
+                <label for="nome">Nome</label>
+                <input id="nome" name="nome" type="text" autocomplete="name" required minlength="2" placeholder="Seu nome" />
+              </div>
+              <div class="field">
+                <label for="email">E-mail</label>
+                <input id="email" name="email" type="email" autocomplete="email" required placeholder="voce@exemplo.com" />
+              </div>
+              <div class="field">
+                <label for="mensagem">Mensagem</label>
+                <textarea id="mensagem" name="mensagem" required minlength="10" placeholder="Como podemos ajudar?"></textarea>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn btn-small" type="submit" aria-label="Enviar mensagem" style="padding:12px 16px;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#fff" d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+                  Enviar
+                </button>
+                <button class="btn btn-outline btn-small" type="button" id="btnPreencher" aria-label="Preencher mensagem exemplo">Preencher exemplo</button>
+              </div>
+
+              <div class="success-text" id="formFeedback" role="status" aria-live="polite"></div>
+            </form>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="about" id="sobre" aria-labelledby="titulo-sobre">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 id="titulo-sobre">Sobre nós</h2>
+            <p>
+              O <strong>Café Aurora</strong> é a cafeteria de bairro que une aroma, conversa e tranquilidade.
+              Aqui você encontra bebidas cuidadas, acolhimento e uma pausa genuína entre compromissos.
+            </p>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <article class="about-card" aria-label="Descrição do Café Aurora">
+            <p>
+              Somos apaixonados por cafés bem feitos, bebidas geladas refrescantes e acompanhamentos preparados diariamente.
+              Do primeiro gole ao último mordisco, nossa experiência é pensada para ser leve — como deve ser uma pausa no bairro.
+            </p>
+
+            <div class="highlights" aria-label="Destaques do Café Aurora">
+              <div class="highlight">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l3 7 7 0-5.5 4 2 7-6.5-4-6.5 4 2-7L2 9l7 0 3-7z"/></svg>
+                <div><strong>100% Grãos arábica</strong><span>Curadoria para um sabor equilibrado.</span></div>
+              </div>
+              <div class="highlight">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M19 3h-4.5l-1 2H9.5l-1-2H4v5h15V3z"/>
+                  <path fill="currentColor" opacity=".35" d="M5 8h14v13H5V8z"/>
+                  <path fill="currentColor" d="M7 11h10v2H7v-2zm0 4h7v2H7v-2z"/>
+                </svg>
+                <div><strong>Preparo diário</strong><span>Rotina que preserva frescor e aroma.</span></div>
+              </div>
+              <div class="highlight">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12zm11 4a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+                  <path fill="currentColor" opacity=".35" d="M12 10.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+                </svg>
+                <div><strong>Wi‑Fi disponível</strong><span>Trabalhe ou estude com conforto.</span></div>
+              </div>
+              <div class="highlight">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M12 21s-7-4.6-7-11a7 7 0 0 1 14 0c0 6.4-7 11-7 11z"/>
+                  <path fill="currentColor" opacity=".35" d="M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                </svg>
+                <div><strong>Produtores locais</strong><span>Mais proximidade, mais histórias.</span></div>
+              </div>
+            </div>
+          </article>
+
+          <aside class="about-aside" aria-label="Chamada para ação">
+            <p style="margin:0; color:#1d2a22; font-weight:700; line-height:1.75;">
+              Quer sentir o sabor do bairro? Passe pela cafeteria do Café Aurora e aproveite nossos gelados e acompanhamentos.
+            </p>
+            <div class="actions">
+              <a class="btn btn-outline btn-small" href="#produtos" aria-label="Ver produtos">Ver produtos</a>
+              <a class="btn btn-small" href="#contato" aria-label="Ir para contato">Contato</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer aria-label="Rodapé">
+    <div class="container">
+      <div class="footer-wrap">
+        <div class="footer-brand">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path fill="currentColor" d="M20 12c0-3.3 2.7-6 6-6h12c3.3 0 6 2.7 6 6v6H20v-6z"/>
+            <path fill="currentColor" d="M18 22h28c3.3 0 6 2.7 6 6v6c0 8.8-7.2 16-16 16H28c-8.8 0-16-7.2-16-16v-6c0-3.3 2.7-6 6-6z" opacity=".95"/>
+            <path fill="#261710" opacity=".9" d="M47 34c2.2 0 4 1.8 4 4s-1.8 4-4 4h-2v-8h2z"/>
+          </svg>
+          <strong>Café Aurora</strong>
+        </div>
+        <small>© 2026 Café Aurora. Todos os direitos reservados.</small>
+      </div>
+    </div>
+  </footer>
+
+  <button class="to-top" type="button" id="btnTopo" aria-hidden="true" aria-label="Voltar ao topo">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 4l-8 8h5v8h6v-8h5l-8-8z"/></svg>
+    <span style="font-weight:950;">Topo</span>
+  </button>
+
+  <!-- WhatsApp: somente ícone -->
+  <a class="whatsapp-float" href="https://wa.me/5565996877963" target="_blank" rel="noopener noreferrer"
+     aria-label="Conversar no WhatsApp (abre em nova aba)" title="WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="#fff" d="M20.5 3.5A11 11 0 0 0 3.9 19.3L3 22l2.8-.9A11 11 0 0 0 20.5 3.5z"/>
+      <path fill="#0B5C2A" d="M12 6c-3 0-5.4 2.3-5.4 5.2 0 1 .3 2 1 2.8l-.6 2.2 2.3-.6c.8.5 1.7.8 2.7.8 3 0 5.4-2.3 5.4-5.2S15 6 12 6zm3.3 7.1c-.2.6-1.1 1.1-1.6 1.2-.4.1-.9.1-1.4 0-1-.3-2.1-1.2-2.7-2.2-.6-1-.9-2-.7-2.6.1-.4.7-1 1-1 .2-.1.4 0 .6 0l.4.7c.1.2.1.3 0 .5l-.2.4c-.1.2-.1.3 0 .5.3.6 1 1.2 1.6 1.5.2.1.3.1.5 0l.4-.3c.2-.1.4-.1.5 0l.7.3c.2.1.2.3.1.5z"/>
+    </svg>
+  </a>
+
+  <!-- VLibras: tradução do site para Libras (widget oficial do governo federal) -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    try { new window.VLibras.Widget('https://vlibras.gov.br/app'); } catch (e) { /* VLibras indisponível */ }
+  </script>
+
+  <script>
+    (function(){
+      // ===== Radio Paradise (autoplay + play/pause no menu) =====
+      const audio = document.getElementById('radio');
+      const box = document.getElementById('radioBox');
+      const btnRadio = document.getElementById('btnRadio');
+      const statusEl = document.getElementById('radioStatus');
+
+      // Radio Paradise (Main Mix): se uma fonte falhar, o player tenta a próxima
+      const SOURCES = [
+        'https://cultura.uol.com.br/radio/',
+        'https://live.hunter.fm/mpb_stream?ag=mp3',
+        'https://streamurl.link/station/radio-mpb/',
+        'https://radiosaovivo.net/novabrasil/',
+        'https://stream.radioparadise.com/flac'
+      ];
+      let srcIndex = 0;
+      let userPaused = false;
+      let allFailed = false;
+      audio.volume = 0.6;
+
+      function setUI(playing, msg, isError){
+        const text = msg || (playing ? 'Tocando agora' : 'Pausada');
+        box.setAttribute('data-playing', String(playing));
+        box.setAttribute('data-error', String(!!isError));
+        box.setAttribute('data-tip', isError ? text : 'Radio Paradise · ' + text.toLowerCase());
+        btnRadio.setAttribute('aria-label', playing ? 'Pausar rádio' : 'Tocar rádio');
+        statusEl.textContent = text;
+      }
+
+      function loadSource(i){
+        srcIndex = i;
+        audio.src = SOURCES[i];
+        audio.load();
+      }
+
+      audio.addEventListener('playing', () => { allFailed = false; setUI(true); });
+      audio.addEventListener('pause', () => { if (!allFailed) setUI(false); });
+      audio.addEventListener('waiting', () => {
+        statusEl.textContent = 'Carregando…';
+        box.setAttribute('data-tip', 'Radio Paradise · carregando…');
+      });
+      audio.addEventListener('error', () => {
+        if (srcIndex < SOURCES.length - 1){
+          loadSource(srcIndex + 1);
+          if (!userPaused) audio.play().catch(() => {});
+        } else {
+          allFailed = true;
+          setUI(false, 'Rádio indisponível', true);
+        }
+      });
+
+      const unlockEvents = ['pointerdown', 'keydown', 'touchstart'];
+      function removeUnlock(){ unlockEvents.forEach(ev => document.removeEventListener(ev, unlock, true)); }
+      function unlock(e){
+        // Ignora cliques no próprio controle da rádio
+        if (e.target && e.target.closest && e.target.closest('.radio')) return;
+        if (userPaused || allFailed || !audio.paused){ removeUnlock(); return; }
+        audio.play().then(removeUnlock).catch(() => {});
+      }
+
+      // Tenta tocar assim que a página abre
+      loadSource(0);
+      audio.play().catch((err) => {
+        // O navegador bloqueou o autoplay: inicia na primeira interação
+        if (err && err.name === 'NotAllowedError'){
+          setUI(false, 'Toque na página para iniciar');
+          unlockEvents.forEach(ev => document.addEventListener(ev, unlock, true));
+        }
+      });
+
+      btnRadio.addEventListener('click', () => {
+        if (audio.paused){
+          userPaused = false;
+          if (allFailed){ allFailed = false; loadSource(0); }
+          setUI(false, 'Conectando…');
+          audio.play().catch(() => {});
+        } else {
+          userPaused = true;
+          audio.pause();
+        }
+      });
+
+      // ===== Menu mobile =====
+      const btnMenu = document.getElementById('btnMenuMobile');
+      const menuMobile = document.getElementById('menuMobile');
+
+      btnMenu?.addEventListener('click', () => {
+        const open = menuMobile.getAttribute('data-open') === 'true';
+        menuMobile.setAttribute('data-open', String(!open));
+        btnMenu.setAttribute('aria-expanded', String(!open));
+      });
+      menuMobile?.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', () => {
+          menuMobile.setAttribute('data-open', 'false');
+          btnMenu?.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // ===== Filtros =====
+      const chips = Array.from(document.querySelectorAll('.chip[data-filter]'));
+      const cards = Array.from(document.querySelectorAll('.product'));
+      const feedback = document.getElementById('produtoFeedback');
+
+      function setFeedback(msg){
+        if(!feedback) return;
+        feedback.textContent = msg;
+        clearTimeout(setFeedback._t);
+        setFeedback._t = setTimeout(() => { feedback.textContent = ''; }, 2600);
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          const filter = chip.getAttribute('data-filter');
+          chips.forEach(c => c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'));
+          cards.forEach(card => {
+            const cat = card.getAttribute('data-cat');
+            card.style.display = (filter === 'todos' || cat === filter) ? '' : 'none';
+          });
+          setFeedback(filter === 'todos' ? 'Mostrando todos os produtos.' : 'Filtro aplicado. Itens atualizados.');
+        });
+      });
+
+      document.querySelectorAll('[data-add]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setFeedback('Adicionado: ' + (btn.getAttribute('data-add') || 'Produto') + '. (Demonstração)');
+        });
+      });
+
+      // ===== Copiar endereço =====
+      const btnCopy = document.getElementById('btnCopiarEndereco');
+      const addrText = document.getElementById('enderecoTexto')?.textContent?.trim() || '';
+      const copyFeedback = document.getElementById('copyFeedback');
+
+      function showCopyMsg(msg){
+        if(!copyFeedback) return;
+        copyFeedback.textContent = msg;
+        clearTimeout(showCopyMsg._t);
+        showCopyMsg._t = setTimeout(() => { copyFeedback.textContent = ''; }, 3000);
+      }
+      btnCopy?.addEventListener('click', async () => {
+        try{
+          await navigator.clipboard.writeText(addrText);
+          showCopyMsg('Endereço copiado!');
+        }catch(e){
+          showCopyMsg('Não foi possível copiar automaticamente. Copie manualmente.');
+        }
+      });
+
+      // ===== Formulário =====
+      const form = document.getElementById('formContato');
+      const formFeedback = document.getElementById('formFeedback');
+      const btnPreencher = document.getElementById('btnPreencher');
+
+      btnPreencher?.addEventListener('click', () => {
+        document.getElementById('nome').value = 'Ana Souza';
+        document.getElementById('email').value = 'ana.souza@exemplo.com';
+        document.getElementById('mensagem').value = 'Olá! Quero saber mais sobre opções geladas para o fim de semana. Obrigada!';
+        formFeedback.textContent = '';
+      });
+
+      form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if(!form.checkValidity()){ form.reportValidity(); return; }
+        formFeedback.textContent = 'Mensagem enviada! Obrigado por falar com o Café Aurora. ✅';
+        form.reset();
+      });
+
+      // ===== Voltar ao topo =====
+      const btnTopo = document.getElementById('btnTopo');
+      const onScroll = () => {
+        const y = window.scrollY || document.documentElement.scrollTop;
+        btnTopo?.setAttribute('aria-hidden', String(!(y > 500)));
+      };
+      window.addEventListener('scroll', onScroll, { passive:true });
+      onScroll();
+      btnTopo?.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+    })();
+  </script>
+</body>
+</html>
